@@ -1,0 +1,131 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+// Book class to represent books
+class Book {
+private:
+    string title;
+    string author;
+    bool checkedOut;
+
+public:
+    Book(string title, string author) : title(title), author(author), checkedOut(false) {}
+
+    string getTitle() {
+        return title;
+    }
+
+    string getAuthor() {
+        return author;
+    }
+
+    bool isCheckedOut() {
+        return checkedOut;
+    }
+
+    void checkOut() {
+        checkedOut = true;
+    }
+
+    void checkIn() {
+        checkedOut = false;
+    }
+};
+
+// Member class to represent members
+class Member {
+private:
+    string name;
+    int memberId;
+
+public:
+    Member(string name, int memberId) : name(name), memberId(memberId) {}
+
+    string getName() {
+        return name;
+    }
+
+    int getMemberId() {
+        return memberId;
+    }
+};
+
+// Library class to manage books and members
+class Library {
+private:
+    vector<Book> books;
+    vector<Member> members;
+
+public:
+    void addBook(string title, string author) {
+        books.push_back(Book(title, author));
+    }
+
+    void addMember(string name, int memberId) {
+        members.push_back(Member(name, memberId));
+    }
+
+    void displayBooks() {
+        cout << "Available Books:" << endl;
+        for (Book& book : books) {
+            if (!book.isCheckedOut()) {
+                cout << book.getTitle() << " by " << book.getAuthor() << endl;
+            }
+        }
+    }
+
+    void displayMembers() {
+        cout << "Library Members:" << endl;
+        for (Member& member : members) {
+            cout << "ID: " << member.getMemberId() << ", Name: " << member.getName() << endl;
+        }
+    }
+
+    void checkoutBook(int memberId, string title) {
+        for (Book& book : books) {
+            if (book.getTitle() == title && !book.isCheckedOut()) {
+                book.checkOut();
+                cout << "Book checked out successfully." << endl;
+                return;
+            }
+        }
+        cout << "Book not available for checkout." << endl;
+    }
+
+    void checkinBook(string title) {
+        for (Book& book : books) {
+            if (book.getTitle() == title && book.isCheckedOut()) {
+                book.checkIn();
+                cout << "Book checked in successfully." << endl;
+                return;
+            }
+        }
+        cout << "Book not checked out or not found." << endl;
+    }
+};
+
+int main() {
+    Library library;
+
+    library.addBook("Book1", "Author1");
+    library.addBook("Book2", "Author2");
+    library.addMember("John Doe", 101);
+    library.addMember("Jane Doe", 102);
+
+    library.displayBooks();
+    library.displayMembers();
+
+    library.checkoutBook(101, "Book1");
+    library.checkoutBook(102, "Book2");
+
+    library.displayBooks();
+
+    library.checkinBook("Book1");
+    library.checkinBook("Book2");
+
+    library.displayBooks();
+
+    return 0;
+}
